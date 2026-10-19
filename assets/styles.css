@@ -1,0 +1,360 @@
+/* =========================================================
+   divaar — design tokens & shell styles
+   ========================================================= */
+:root {
+  --brand: #b3261e;
+  --brand-strong: #8f1d17;
+  --brand-soft: #fdeceb;
+  --ink: #1d1c1a;
+  --ink-soft: #5c5852;
+  --ink-faint: #8a857e;
+  --surface: #ffffff;
+  --surface-2: #f7f4f0;
+  --line: #e7e1da;
+  --ok: #1f7a4d;
+  --warn: #9a6700;
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --shadow-s: 0 1px 2px rgba(29, 28, 26, 0.06), 0 4px 12px rgba(29, 28, 26, 0.04);
+  --shadow-m: 0 10px 30px rgba(29, 28, 26, 0.1);
+  --font: 'Vazirmatn', 'IRANSans', 'Segoe UI', Tahoma, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(1200px 480px at 100% -10%, #fff5f3 0%, transparent 60%),
+    var(--surface-2);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: 50%;
+  transform: translate(50%, -120%);
+  padding: 8px 16px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 0 0 var(--radius-s) var(--radius-s);
+  transition: transform 0.2s ease;
+  z-index: 50;
+}
+
+.skip-link:focus {
+  transform: translate(50%, 0);
+}
+
+/* ---------- header ---------- */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.app-header__inner {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  display: block;
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand__name {
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: 0.2px;
+}
+
+.brand__tagline {
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+.app-header__slot {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.app-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.nav-pill {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-pill:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.nav-pill.is-active {
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  font-weight: 600;
+}
+
+/* ---------- layout ---------- */
+.app-main {
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: 22px 20px 56px;
+  flex: 1 0 auto;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.toolbar:empty {
+  display: none;
+}
+
+.results-meta {
+  min-height: 22px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+.listing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  gap: 16px;
+}
+
+.listing-grid:empty {
+  display: block;
+}
+
+/* ---------- buttons & form controls ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--brand-strong);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink-soft);
+}
+
+.btn--ghost:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  font-size: 13.5px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--ink-faint);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.12);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field__label {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* ---------- empty state ---------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 56px 20px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-l);
+}
+
+.empty-state__icon {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.empty-state__title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.empty-state__hint {
+  max-width: 46ch;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ---------- footer ---------- */
+.app-footer {
+  border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.app-footer__inner {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+.app-footer__brand {
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 0.2px;
+}
+
+@media (max-width: 720px) {
+  .app-header__nav {
+    display: none;
+  }
+
+  .app-header__inner {
+    flex-wrap: wrap;
+  }
+
+  .listing-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px;
+  }
+}
