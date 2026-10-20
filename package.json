@@ -1,0 +1,11 @@
+{
+  "name": "divaar",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "divaar — بازارچهٔ آنلاین آگهی (نسخهٔ نمونه)",
+  "scripts": {
+    "test": "node tests/run.js",
+    "serve": "python3 -m http.server 8080"
+  }
+}
