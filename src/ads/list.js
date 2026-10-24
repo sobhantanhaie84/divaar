@@ -5,10 +5,10 @@ import { emptyState } from '../ui.js';
  * Grid renderer. Returns the number of rendered cards so the caller can
  * decide whether to show the "no results" state.
  */
-export function renderAds(grid, ads) {
+export function renderAds(grid, ads, options = {}) {
   if (!grid) return 0;
   grid.setAttribute('aria-busy', 'false');
-  grid.innerHTML = ads.map(renderAdCard).join('');
+  grid.innerHTML = ads.map((ad) => renderAdCard(ad, options)).join('');
   return ads.length;
 }
 
@@ -22,6 +22,7 @@ export function renderSkeleton(grid, count = 6) {
 /** Shared "nothing matched" panel, reused by search and filter features. */
 export function renderNoResults(grid, onReset) {
   if (!grid) return;
+  grid.setAttribute('aria-busy', 'false');
   grid.innerHTML = emptyState({
     icon: '🔍',
     title: 'آگهی‌ای با این مشخصات پیدا نشد',
