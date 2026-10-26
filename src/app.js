@@ -8,41 +8,52 @@
 import { store } from './state.js';
 import { emptyState, renderHeader } from './ui.js';
 import { ads } from './data/ads.js';
-import { normalizeAds } from './ads/model.js';
+import { getCities, normalizeAds } from './ads/model.js';
 import { renderAds, renderNoResults, renderSkeleton } from './ads/list.js';
 import { mountSearch } from './search/bar.js';
 import { searchAds } from './search/match.js';
+import { mountToolbar } from './filters/toolbar.js';
+import { applyFilters } from './filters/query.js';
 import { toFa } from './utils.js';
 
 const grid = document.querySelector('#listing-grid');
 const meta = document.querySelector('#results-meta');
 
 renderHeader(document.querySelector('#app-header'));
-mountSearch(document.querySelector('#search-slot'), store);
 
 const inventory = normalizeAds(ads);
 
+mountSearch(document.querySelector('#search-slot'), store);
+mountToolbar(document.querySelector('#toolbar'), store, { cities: getCities(inventory) });
+
 /**
  * The single render entry point. Features decorate `collectItems` instead of
- * re-implementing rendering, which keeps the data flow one-directional.
+ * re-implementing rendering, which keeps the data flow one-directional:
+ * inventory -> search -> filters/sort -> grid.
  */
 function collectItems(state) {
-  return searchAds(inventory, state.query);
+  const searched = searchAds(inventory, state.query);
+  return applyFilters(searched, state);
 }
 
 function render(state) {
   const items = collectItems(state);
+  const isFiltered = Boolean(state.query) || state.city !== 'all' || state.minPrice !== null || state.maxPrice !== null;
 
   if (meta) {
-    meta.textContent = state.query
-      ? `${toFa(items.length)} نتیجه برای «${state.query}» در ${toFa(inventory.length)} آگهی`
-      : `${toFa(items.length)} آگهی از ${toFa(inventory.length)} آگهی موجود`;
+    if (!items.length) {
+      meta.textContent = '';
+    } else if (isFiltered) {
+      meta.textContent = `${toFa(items.length)} نتیجه از ${toFa(inventory.length)} آگهی`;
+    } else {
+      meta.textContent = `${toFa(items.length)} آگهی از ${toFa(inventory.length)} آگهی موجود`;
+    }
   }
 
   if (!grid) return;
 
   if (!items.length) {
-    if (state.query) {
+    if (isFiltered) {
       renderNoResults(grid, () => store.reset());
       return;
     }

@@ -626,3 +626,152 @@ select {
     display: none;
   }
 }
+
+/* =========================================================
+   Filter & sort toolbar — feature/filters-sort
+   ========================================================= */
+.toolbar {
+  align-items: flex-end;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s);
+}
+
+.toolbar.has-active-filters {
+  border-color: #e3cfcb;
+}
+
+.field--inline,
+.field--range,
+.field--sort {
+  flex: 0 1 auto;
+}
+
+.field--inline .select {
+  min-width: 148px;
+}
+
+.select {
+  appearance: none;
+  padding-inline-end: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a857e' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 10px center;
+  background-size: 14px;
+  cursor: pointer;
+}
+
+.range {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.range__input {
+  width: 116px;
+  text-align: center;
+}
+
+.range__dash {
+  color: var(--ink-faint);
+  font-size: 12px;
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.segmented__btn {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.segmented__btn:hover {
+  color: var(--ink);
+}
+
+.segmented__btn[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--brand-strong);
+  font-weight: 700;
+  box-shadow: var(--shadow-s);
+}
+
+.btn--sm {
+  padding: 7px 12px;
+  font-size: 12.5px;
+}
+
+.toolbar__tail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
+
+.chips:empty {
+  display: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid #f0d7d3;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.chip:hover {
+  background: #fbdedb;
+}
+
+.chip__x {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+@media (max-width: 860px) {
+  .toolbar {
+    gap: 12px;
+  }
+
+  .field--range,
+  .field--sort {
+    flex: 1 1 160px;
+  }
+
+  .range__input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .toolbar__tail {
+    margin-inline-start: 0;
+  }
+}
