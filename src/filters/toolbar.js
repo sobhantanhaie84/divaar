@@ -62,11 +62,19 @@ export function mountToolbar(root, s = store, { cities = [] } = {}) {
   const countBadge = root.querySelector('#filter-count');
   const clearButton = root.querySelector('[data-action="clear-filters"]');
 
-  const commitPrice = debounce(() => {
-    const minPrice = parseNumber(minInput.value);
-    const maxPrice = parseNumber(maxInput.value);
-    s.set({ minPrice, maxPrice });
-  }, 300);
+  // `priceDirty` protects an in-flight debounce: without it, any other store
+  // write (clicking «گران‌ترین» right after typing) would re-sync the inputs
+  // from stale state and wipe what the user just typed.
+  let priceDirty = false;
+  const syncPrice = () => {
+    priceDirty = false;
+    s.set({ minPrice: parseNumber(minInput.value), maxPrice: parseNumber(maxInput.value) });
+  };
+  const commitPrice = debounce(syncPrice, 300);
+  const commitPriceNow = () => {
+    commitPrice.cancel();
+    syncPrice();
+  };
 
   citySelect.addEventListener('change', () => s.set({ city: citySelect.value }));
 
@@ -74,9 +82,12 @@ export function mountToolbar(root, s = store, { cities = [] } = {}) {
     input.addEventListener('input', () => {
       // keep only digits/separators so the field never accepts letters
       input.value = input.value.replace(/[^\d\u06f0-\u06f9\u0660-\u0669٬,، ]/g, '');
+      priceDirty = true;
       commitPrice();
     });
+    input.addEventListener('change', commitPriceNow);
     input.addEventListener('blur', () => {
+      commitPriceNow();
       const value = parseNumber(input.value);
       if (value !== null) input.value = toFa(value.toLocaleString('en-US').replace(/,/g, '٬'));
     });
@@ -101,8 +112,9 @@ export function mountToolbar(root, s = store, { cities = [] } = {}) {
 
     const activeMin = document.activeElement === minInput;
     const activeMax = document.activeElement === maxInput;
-    if (!activeMin) minInput.value = state.minPrice === null ? '' : toFa(state.minPrice.toLocaleString('en-US').replace(/,/g, '٬'));
-    if (!activeMax) maxInput.value = state.maxPrice === null ? '' : toFa(state.maxPrice.toLocaleString('en-US').replace(/,/g, '٬'));
+    const pricePending = priceDirty;
+    if (!activeMin && !pricePending) minInput.value = state.minPrice === null ? '' : toFa(state.minPrice.toLocaleString('en-US').replace(/,/g, '٬'));
+    if (!activeMax && !pricePending) maxInput.value = state.maxPrice === null ? '' : toFa(state.maxPrice.toLocaleString('en-US').replace(/,/g, '٬'));
 
     for (const button of sortButtons) {
       button.setAttribute('aria-pressed', String(button.dataset.sort === state.sort));

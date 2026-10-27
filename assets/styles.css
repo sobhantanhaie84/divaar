@@ -27,6 +27,13 @@
   box-sizing: border-box;
 }
 
+/* Buttons and badges set `display`, which beats the UA rule for [hidden].
+   Components rely on the `hidden` attribute for progressive states, so make
+   it authoritative once, here, instead of patching every component. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }
