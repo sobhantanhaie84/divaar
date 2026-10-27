@@ -1,13 +1,16 @@
 import { categoryMeta } from './model.js';
 import { escapeHtml, formatDate, formatPrice, toFa } from '../utils.js';
+import { highlight } from '../search/match.js';
 
 /**
  * One listing card. Pure string builder: no side effects, easy to snapshot.
- * Every user-controlled string passes through escapeHtml.
+ * Every user-controlled string passes through escapeHtml; when a search query
+ * is active the title also gets <mark> highlights for the matched tokens.
  */
-export function renderAdCard(ad) {
+export function renderAdCard(ad, { query = '' } = {}) {
   const meta = categoryMeta(ad.category);
   const isNegotiable = ad.price === 0;
+  const title = query ? highlight(ad.title, query) : escapeHtml(ad.title);
 
   return `
     <article class="ad-card" data-id="${escapeHtml(ad.id)}">
@@ -17,7 +20,7 @@ export function renderAdCard(ad) {
           <span class="ad-card__category">${escapeHtml(ad.category)}</span>
         </div>
         <div class="ad-card__body">
-          <h3 class="ad-card__title">${escapeHtml(ad.title)}</h3>
+          <h3 class="ad-card__title">${title}</h3>
           <p class="ad-card__price${isNegotiable ? ' ad-card__price--free' : ''}">
             ${formatPrice(ad.price)}
           </p>
