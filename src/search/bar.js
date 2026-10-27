@@ -43,10 +43,17 @@ export function mountSearch(root, s = store) {
 
   const input = root.querySelector('#search-input');
   const clearButton = root.querySelector('[data-action="clear-search"]');
-  const commit = debounce((value) => s.set({ query: value }), 180);
+  // Same guard as the filter toolbar: a pending debounce must not be wiped by
+  // an unrelated store write (e.g. clicking a sort button mid-typing).
+  let typed = false;
+  const commit = debounce((value) => {
+    typed = false;
+    s.set({ query: value.replace(/\s+/g, ' ').trimStart() });
+  }, 180);
 
   function commitNow(value) {
     const next = value.replace(/\s+/g, ' ').trimStart();
+    typed = false;
     clearButton.hidden = !value;
     commit.cancel();
     s.set({ query: next });
@@ -54,8 +61,12 @@ export function mountSearch(root, s = store) {
 
   input.addEventListener('input', () => {
     clearButton.hidden = !input.value;
+    typed = true;
     commit(input.value);
   });
+
+  // Leaving the field commits immediately instead of waiting for the timer.
+  input.addEventListener('change', () => commitNow(input.value));
 
   input.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && input.value) {
@@ -83,8 +94,8 @@ export function mountSearch(root, s = store) {
 
   // Keep the field in sync with external resets (e.g. "clear all filters").
   s.subscribe(({ query }) => {
-    if (document.activeElement !== input && input.value !== query) input.value = query;
-    clearButton.hidden = !query;
+    if (!typed && document.activeElement !== input && input.value !== query) input.value = query;
+    clearButton.hidden = !query && !typed;
   });
 
   return { focus: () => input.focus() };
